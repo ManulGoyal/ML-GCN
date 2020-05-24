@@ -6,9 +6,9 @@ PyTorch implementation of [Multi-Label Image Recognition with Graph Convolutiona
 ### Requirements
 Please, install the following packages
 - numpy
-- torch-0.3.1
+- torch
 - torchnet
-- torchvision-0.2.0
+- torchvision
 - tqdm
 
 ### Download pretrain models
@@ -31,7 +31,7 @@ or
 
 ### Demo VOC 2007
 ```sh
-python3 demo_voc2007_gcn.py data/voc --image-size 448 --batch-size 32 -e --resume checkpoint/voc/voc_checkpoint.pth.tar
+python3 demo_voc2007_gcn.py data/voc --image-size 448 --batch-size 32 -e --resume checkpoint/voc2007/checkpoint.pth.tar
 ```
 
 ### Demo COCO 2014
