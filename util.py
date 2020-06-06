@@ -293,7 +293,7 @@ def gen_A(num_classes, t, adj_file):
     result = pickle.load(open(adj_file, 'rb'))
     _adj = result['adj']
     _nums = result['nums']
-    _nums = _nums[:, np.newaxis]
+    _nums = _nums[:, np.newaxis]                # transforms [a, b, c] to [[a], [b], [c]]
     _adj = _adj / _nums
     _adj[_adj < t] = 0
     _adj[_adj >= t] = 1

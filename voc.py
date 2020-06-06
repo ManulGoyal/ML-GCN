@@ -88,7 +88,7 @@ def read_object_labels_csv(file, header=True):
         rownum = 0
         for row in reader:
             if header and rownum == 0:
-                header = row
+                header = row                    # TODO: doubt
             else:
                 if num_categories == 0:
                     num_categories = len(row) - 1
@@ -100,7 +100,7 @@ def read_object_labels_csv(file, header=True):
             rownum += 1
     return images
 
-
+# unused function
 def find_images_classification(root, dataset, set):
     path_labels = os.path.join(root, 'VOCdevkit', dataset, 'ImageSets', 'Main')
     images = []
@@ -248,12 +248,13 @@ class Voc2007Classification(data.Dataset):
         print('[dataset] VOC 2007 classification set=%s number of classes=%d  number of images=%d' % (
             set, len(self.classes), len(self.images)))
 
+    # open the required image on the go (when item is accessed)
     def __getitem__(self, index):
         path, target = self.images[index]
         img = Image.open(os.path.join(self.path_images, path + '.jpg')).convert('RGB')
-        if self.transform is not None:
-            img = self.transform(img)
-        if self.target_transform is not None:
+        if self.transform is not None:                  # self.transform is set in engine.py learning method
+            img = self.transform(img)   
+        if self.target_transform is not None:       
             target = self.target_transform(target)
 
         return (img, path, self.inp), target

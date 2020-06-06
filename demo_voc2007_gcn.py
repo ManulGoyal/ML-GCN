@@ -9,7 +9,7 @@ parser.add_argument('data', metavar='DIR',
 parser.add_argument('--image-size', '-i', default=224, type=int,
                     metavar='N', help='image size (default: 224)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
-                    help='number of data loading workers (default: 4)')
+                    help='number of data loading workers (default: 4)')                 # TODO: Doubt
 parser.add_argument('--epochs', default=20, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--epoch_step', default=[30], type=int, nargs='+',
@@ -21,7 +21,7 @@ parser.add_argument('-b', '--batch-size', default=16, type=int,
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
                     metavar='LR', help='initial learning rate')
 parser.add_argument('--lrp', '--learning-rate-pretrained', default=0.1, type=float,
-                    metavar='LR', help='learning rate for pre-trained layers')
+                    metavar='LR', help='learning rate for pre-trained layers')          # TODO: Doubt 
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                     help='momentum')
 parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,

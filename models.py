@@ -45,7 +45,7 @@ class GCNResnet(nn.Module):
         super(GCNResnet, self).__init__()
         self.features = nn.Sequential(
             model.conv1,
-            model.bn1,
+            model.bn1,          # TODO: doubt
             model.relu,
             model.maxpool,
             model.layer1,
@@ -58,7 +58,7 @@ class GCNResnet(nn.Module):
 
         self.gc1 = GraphConvolution(in_channel, 1024)
         self.gc2 = GraphConvolution(1024, 2048)
-        self.relu = nn.LeakyReLU(0.2)
+        self.relu = nn.LeakyReLU(0.2)           # Knob
 
         _adj = gen_A(num_classes, t, adj_file)
         self.A = Parameter(torch.from_numpy(_adj).float())
@@ -66,20 +66,22 @@ class GCNResnet(nn.Module):
         self.image_normalization_mean = [0.485, 0.456, 0.406]
         self.image_normalization_std = [0.229, 0.224, 0.225]
 
-    def forward(self, feature, inp):
-        feature = self.features(feature)
+    # feature is tensor of size (batch_size, channels, height, width)
+    # inp is tensor of size (batch_size, num_classes, 300) storing the word embeddings
+    def forward(self, feature, inp):        
+        feature = self.features(feature)        # applying resnet
         feature = self.pooling(feature)
-        feature = feature.view(feature.size(0), -1)
+        feature = feature.view(feature.size(0), -1)     # now feature is (batch_size, 2048)
 
 
-        inp = inp[0]
+        inp = inp[0]                        # now inp is of size (num_classes,  300)
         adj = gen_adj(self.A).detach()
-        x = self.gc1(inp, adj)
+        x = self.gc1(inp, adj)              # now x is of size (num_classes, 1024)
         x = self.relu(x)
-        x = self.gc2(x, adj)
+        x = self.gc2(x, adj)                # now x is of size (num_classes, 2048)
 
-        x = x.transpose(0, 1)
-        x = torch.matmul(feature, x)
+        x = x.transpose(0, 1)               # now x is of size (2048, num_classes)
+        x = torch.matmul(feature, x)        # now x is of size (batch_size, num_classes)
         return x
 
     def get_config_optim(self, lr, lrp):
