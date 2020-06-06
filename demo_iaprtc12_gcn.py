@@ -1,7 +1,7 @@
 import argparse
 from engine import *
 from models import *
-from voc import *
+from iaprtc12 import *
 
 parser = argparse.ArgumentParser(description='WILDCAT Training')
 parser.add_argument('data', metavar='DIR',
