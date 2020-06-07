@@ -28,7 +28,7 @@ for i in range(num_classes):
 result = dict()
 result['adj'] = adj
 result['nums'] = nums
-adj_file = open('data/espgame/espgame_adj.pkl', 'ab')
-pk.dump(result, adj_file)
-adj_file.close()
+# adj_file = open('data/espgame/espgame_adj.pkl', 'ab')
+# pk.dump(result, adj_file)
+# adj_file.close()
 

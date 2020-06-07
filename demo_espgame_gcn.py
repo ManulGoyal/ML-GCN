@@ -45,10 +45,9 @@ def main_espgame():
     use_gpu = torch.cuda.is_available()
 
     #Add path to word embeddings for espgame dataset
-    # esp_path = 'data/coco/coco_glove_word2vec.pkl'
-
-    train_dataset = ESPGAME(args.data, phase='train', inp_name=esp_path)
-    val_dataset = ESPGAME(args.data, phase='val', inp_name=esp_path)
+    esp_path = 'data/espgame/espgame_glove_word2vec.pkl'
+    train_dataset = ESPGAME(args.data, 'trainval', inp_name=esp_path)
+    val_dataset = ESPGAME(args.data, 'test', inp_name=esp_path)
 
     #Add num_classes for espgame dataset
     num_classes = 269
