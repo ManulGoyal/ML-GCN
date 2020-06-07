@@ -27,7 +27,7 @@ def get_classes():
 
 def get_labelled_data(setname):
     images = []
-    dataset = mat[dataset]
+    dataset = mat[dataset][0]
     num_img = len(mat['data'][0])
     num_classes = len(mat['dict'])
     # annot = np.zeros(shape = (num_classes, num_img), dtype=np.int64)
