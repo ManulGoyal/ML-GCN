@@ -66,7 +66,7 @@ class ESPGAME(data.Dataset):
 
     def __getitem__(self, index):
         path, target = self.images[index]
-        img = Image.open(os.path.join(self.path_images, path + '.jpg')).convert('RGB')
+        img = Image.open(os.path.join(self.path_images, path)).convert('RGB')
         if self.transform is not None:
             img = self.transform(img)
         if self.target_transform is not None:
