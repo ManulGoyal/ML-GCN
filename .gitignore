@@ -16,3 +16,4 @@ data/iaprtc/classification_trainval.csv
 data/iaprtc/iaprtc12.20091111/
 data/iaprtc/iaprtc12/
 temp.py
+checkpoint/

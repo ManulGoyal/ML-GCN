@@ -239,6 +239,7 @@ class Engine(object):
             self.on_start_batch(True, model, criterion, data_loader, optimizer)
 
             if self.state['use_gpu']:
+                print("using cuda")
                 self.state['target'] = self.state['target'].cuda()
 
             self.on_forward(True, model, criterion, data_loader, optimizer)
