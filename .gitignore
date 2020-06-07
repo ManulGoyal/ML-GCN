@@ -1,3 +1,5 @@
 data/voc/files
 data/voc/tmp
 data/voc/VOCdevkit
+data/glove_word_embeddings
+ESP-ImageSet/
