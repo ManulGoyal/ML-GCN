@@ -406,9 +406,9 @@ class MultiLabelMAPEngine(Engine):
 
 class GCNMultiLabelMAPEngine(MultiLabelMAPEngine):
     def on_forward(self, training, model, criterion, data_loader, optimizer=None, display=True):
-        feature_var = torch.Tensor(self.state['feature']).float()
+        feature_var = torch.Tensor(self.state['feature']).float()       #self.state['feature'] is defined in below method
         target_var = torch.Tensor(self.state['target']).float()
-        inp_var = torch.Tensor(self.state['input']).float().detach()  # one hot
+        inp_var = torch.Tensor(self.state['input']).float().detach()  # one hot TODO: doubt, why detach?
         if not training:
             with torch.no_grad():
                 self.state['output'] = model(feature_var, inp_var)
@@ -416,20 +416,27 @@ class GCNMultiLabelMAPEngine(MultiLabelMAPEngine):
         else:
             self.state['output'] = model(feature_var, inp_var)
             self.state['loss'] = criterion(self.state['output'], target_var)
+
+            # Backpropagation
             optimizer.zero_grad()
             self.state['loss'].backward()
-            nn.utils.clip_grad_norm(model.parameters(), max_norm=10.0)
+
+            # The norm is computed over all gradients together, as if they were concatenated
+            # into a single vector. Gradients are modified in-place.
+            nn.utils.clip_grad_norm_(model.parameters(), max_norm=10.0)
             optimizer.step()
      
 
     def on_start_batch(self, training, model, criterion, data_loader, optimizer=None, display=True):
 
         self.state['target_gt'] = self.state['target'].clone()
-        self.state['target'][self.state['target'] == 0] = 1
+
+        # Below two lines change 0s to 1s and -1s to 0s, giving a 0, 1 array
+        self.state['target'][self.state['target'] == 0] = 1         
         self.state['target'][self.state['target'] == -1] = 0
 
         input = self.state['input']
-        self.state['feature'] = input[0]
-        self.state['out'] = input[1]
-        self.state['input'] = input[2]
+        self.state['feature'] = input[0]        # stores the image matrix
+        self.state['out'] = input[1]            # stores the image number (ex. 000050)
+        self.state['input'] = input[2]          # stores the word embedding matrix (20x300)
 
