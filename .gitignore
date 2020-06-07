@@ -3,3 +3,16 @@ data/voc/tmp
 data/voc/VOCdevkit
 data/glove_word_embeddings
 ESP-ImageSet/
+.ipynb_checkpoints/
+Untitled.ipynb
+__pycache__/engine.cpython-38.pyc
+__pycache__/iaprtc12.cpython-38.pyc
+__pycache__/models.cpython-38.pyc
+__pycache__/temp.cpython-38.pyc
+__pycache__/util.cpython-38.pyc
+__pycache__/voc.cpython-38.pyc
+data/iaprtc/classification_test.csv
+data/iaprtc/classification_trainval.csv
+data/iaprtc/iaprtc12.20091111/
+data/iaprtc/iaprtc12/
+temp.py
