@@ -29,7 +29,11 @@ def download_iaprtc12(root):
     if not os.path.exists(iaprtc12_path):
         parts = urlparse(iaprtc_url)
         filename = os.path.basename(parts.path)
-        cached_file = os.path.join(root, 'tmp', filename)
+        tmp_path = os.path.join(root, 'tmp')
+        cached_file = os.path.join(tmp_path, filename)
+
+        if not os.path.exists(tmp_path):
+            os.makedirs(tmp_path)
 
         if not os.path.exists(cached_file):
             print('Downloading: "{}" to {}\n'.format(iaprtc_url, cached_file))
