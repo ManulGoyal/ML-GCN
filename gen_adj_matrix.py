@@ -12,7 +12,7 @@ save_path = 'data/iaprtc/iaprtc_adj.pkl'
 annot_file = 'data/iaprtc/annotation/iaprtc12_train_annot.csv'
 
 def read_object_labels_csv(file, header=False):
-    images = np.empty((num_samples, num_categories), dtype='float32')
+    images = np.empty((num_samples, num_categories), dtype='int64')
     print('[dataset] read', file)
     with open(file, 'r') as f:
         reader = csv.reader(f)
@@ -24,7 +24,7 @@ def read_object_labels_csv(file, header=False):
                 # if num_categories == 0:
                 #     num_categories = len(row)
                 
-                images[i] = (np.asarray(row[0:])).astype(np.float32)
+                images[i] = (np.asarray(row[0:])).astype(np.int64)
                 # labels = torch.from_numpy(labels)
                 # item = (name, labels)
                 
@@ -42,7 +42,8 @@ images = read_object_labels_csv(annot_file)
 
 adj = np.dot(images.transpose(), images)
 # print(adj.shape)
-nums = adj.sum(0)
+nums = images.sum(0)
+print(nums.shape)
 # print(nums == adj.sum(1))
 # print(cooccurence.sum(0) == cooccurence.sum(1))
 # for i, r in enumerate(mat):
