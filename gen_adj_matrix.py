@@ -41,9 +41,13 @@ images = read_object_labels_csv(annot_file)
 # ll
 
 adj = np.dot(images.transpose(), images)
+for i in range(adj.shape[0]):
+    adj[i, i] = 0
 # print(adj.shape)
 nums = images.sum(0)
-print(nums.shape)
+# print(nums.shape)
+
+
 # print(nums == adj.sum(1))
 # print(cooccurence.sum(0) == cooccurence.sum(1))
 # for i, r in enumerate(mat):
