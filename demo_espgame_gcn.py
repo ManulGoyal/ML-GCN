@@ -51,10 +51,10 @@ def main_espgame():
     val_dataset = ESPGAME(args.data, phase='val', inp_name=esp_path)
 
     #Add num_classes for espgame dataset
-    # num_classes = 80
+    num_classes = 269
 
     #Add path to adjacency matrix for espgame dataset
-    # esp_adj = 'data/coco/coco_adj.pkl'
+    esp_adj = 'data/espgame/espgame_adj.pkl'
     model = gcn_resnet101(num_classes=num_classes, t=0.4, adj_file=esp_adj)
 
     # define loss function (criterion)
@@ -67,7 +67,7 @@ def main_espgame():
                                 weight_decay=args.weight_decay)
 
     #Add path to espgame checkpoint
-    # esp_checkpoint = 'checkpoint/coco/'
+    esp_checkpoint = 'checkpoint/espgame/'
     state = {'batch_size': args.batch_size, 'image_size': args.image_size, 'max_epochs': args.epochs,
              'evaluate': args.evaluate, 'resume': args.resume, 'num_classes':num_classes}
     state['difficult_examples'] = True
