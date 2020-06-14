@@ -64,6 +64,9 @@ class ESPGAME(data.Dataset):
             self.inp = pickle.load(f)
         self.inp_name = inp_name
 
+        print('[dataset] ESPGAME classification set=%s number of classes=%d  number of images=%d' % (
+            set, len(self.classes), len(self.images)))
+
     def __getitem__(self, index):
         path, target = self.images[index]
         img = Image.open(os.path.join(self.path_images, path)).convert('RGB')
