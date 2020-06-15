@@ -57,9 +57,9 @@ def get_classes():
         classes.append(keyword)
     return classes
 
-def get_labelled_data(setname):
+def get_labelled_data(setname, path):
     images = []
-    dataset = mat[dataset][0]
+    dataset = mat[setname][0]
     num_img = len(mat['data'][0])
     num_classes = len(mat['dict'])
     # annot = np.zeros(shape = (num_classes, num_img), dtype=np.int64)
@@ -68,6 +68,9 @@ def get_labelled_data(setname):
         img = data[val-1]
         keywords = img['keywords'][0]
         name = img['file'][0]
+        img_path = os.path.join(path, name)
+        if not os.path.exists(img_path): 
+            continue 
         labels = np.zeros(shape = (num_classes, ), dtype=np.int64)
         for keyword in keywords:
             labels[keyword-1] = 1
@@ -91,7 +94,7 @@ class ESPGAME(data.Dataset):
         else:
             setname = 'test'
 
-        self.images = get_labelled_data(setname)
+        self.images = get_labelled_data(setname, self.path_images)
 
         with open(inp_name, 'rb') as f:
             self.inp = pickle.load(f)
