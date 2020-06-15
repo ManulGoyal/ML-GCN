@@ -16,6 +16,38 @@ from util import *
 images_folder_path = os.path.join('ESP-ImageSet', 'images')
 datamap_path = os.path.join('misc', 'esp_data.mat')
 mat = scipy.io.loadmat(datamap_path)
+espgame_url = 'http://hunch.net/~learning/ESP-ImageSet.tar.gz'
+
+def download_espgame(root):
+
+    espgame_path = os.path.join(root, 'ESP-ImageSet')
+
+    # create directory
+    if not os.path.exists(root):
+        os.makedirs(root)
+
+    if not os.path.exists(espgame_path):
+        parts = urlparse(espgame_url)
+        filename = os.path.basename(parts.path)
+        tmp_path = os.path.join(root, 'tmp')
+        cached_file = os.path.join(tmp_path, filename)
+
+        if not os.path.exists(tmp_path):
+            os.makedirs(tmp_path)
+
+        if not os.path.exists(cached_file):
+            print('Downloading: "{}" to {}\n'.format(espgame_url, cached_file))
+            util.download_url(espgame_url, cached_file)
+
+        # extract file
+        print('[dataset] Extracting tar file {file} to {path}'.format(file=cached_file, path=root))
+        cwd = os.getcwd()
+        tar = tarfile.open(cached_file, "r:gz")
+        os.chdir(root)
+        tar.extractall()
+        tar.close()
+        os.chdir(cwd)
+        print('[dataset] Done!')
 
 def get_classes():
     classes = []
@@ -52,7 +84,8 @@ class ESPGAME(data.Dataset):
         self.transform = transform
         self.target_transform = target_transform
         self.classes = get_classes()
-
+        # download dataset
+        download_espgame(self.root)
         if self.set == 'trainval':
             setname = 'train'
         else:
