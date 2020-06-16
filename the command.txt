@@ -1,0 +1,1 @@
+python3 demo_espgame_gcn.py data/espgame --image-size 448 --batch-size 32 --resume checkpoint/espgame/checkpoint.pth.tar
