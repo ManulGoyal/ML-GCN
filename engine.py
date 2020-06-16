@@ -424,6 +424,7 @@ class GCNMultiLabelMAPEngine(MultiLabelMAPEngine):
             self.state['output'] = model(feature_var, inp_var)
             self.state['loss'] = criterion(self.state['output'], target_var)
 
+            
             # Backpropagation
             optimizer.zero_grad()
             self.state['loss'].backward()
