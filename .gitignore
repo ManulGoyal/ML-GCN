@@ -19,3 +19,4 @@ temp.py
 checkpoint/
 data/espgame/ESP-ImageSet
 data/espgame/tmp
+*.ipynb

@@ -110,7 +110,10 @@ def write_object_labels_csv(images, file, labels, names):
         for i, name in enumerate(names):
             example = {'name' : name}
             for j, tag in enumerate(images[i]):
-                example[labels[j]] = int(tag)
+                if tag == 0:
+                    example[labels[j]] = -1
+                else:
+                    example[labels[j]] = 1
             writer.writerow(example)
     csvfile.close()
 
