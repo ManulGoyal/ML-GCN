@@ -63,7 +63,7 @@ def get_labelled_data(setname, path):
     num_img = len(mat['data'][0])
     num_classes = len(mat['dict'])
     cnt = 0
-    mx = 5000
+    mx = 20000
     # annot = np.zeros(shape = (num_classes, num_img), dtype=np.int64)
     data = mat['data'][0]
     for val in dataset:
