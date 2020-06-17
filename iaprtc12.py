@@ -16,6 +16,40 @@ path_to_dictionary = 'data/iaprtc/annotation/iaprtc12_dictionary.txt'
 images_folder_path = os.path.join('iaprtc12', 'images')
 annotation_folder_path = 'annotation'
 
+iaprtc_url = 'http://www-i6.informatik.rwth-aachen.de/imageclef/resources/iaprtc12.tgz'
+
+def download_iaprtc12(root):
+
+    iaprtc12_path = os.path.join(root, 'iaprtc12')
+
+    # create directory
+    if not os.path.exists(root):
+        os.makedirs(root)
+
+    if not os.path.exists(iaprtc12_path):
+        parts = urlparse(iaprtc_url)
+        filename = os.path.basename(parts.path)
+        tmp_path = os.path.join(root, 'tmp')
+        cached_file = os.path.join(tmp_path, filename)
+
+        if not os.path.exists(tmp_path):
+            os.makedirs(tmp_path)
+
+        if not os.path.exists(cached_file):
+            print('Downloading: "{}" to {}\n'.format(iaprtc_url, cached_file))
+            util.download_url(iaprtc_url, cached_file)
+
+        # extract file
+        print('[dataset] Extracting tar file {file} to {path}'.format(file=cached_file, path=root))
+        cwd = os.getcwd()
+        tar = tarfile.open(cached_file, "r:gz")
+        os.chdir(root)
+        tar.extractall()
+        tar.close()
+        os.chdir(cwd)
+        print('[dataset] Done!')
+
+    
 def read_file(file):
     words = []
     with open(file) as f:
@@ -76,13 +110,15 @@ def write_object_labels_csv(images, file, labels, names):
         for i, name in enumerate(names):
             example = {'name' : name}
             for j, tag in enumerate(images[i]):
-                example[labels[j]] = int(tag)
+                if tag == 0:
+                    example[labels[j]] = -1
+                else:
+                    example[labels[j]] = 1
             writer.writerow(example)
     csvfile.close()
 
 class IAPRTC12Classification(data.Dataset):
     def __init__(self, root, set, transform=None, target_transform=None, inp_name=None, adj=None):
-        print('heelo')
         self.root = root
         # self.path_devkit = os.path.join(root, 'VOCdevkit')
         self.path_images = os.path.join(root, images_folder_path)
@@ -91,7 +127,7 @@ class IAPRTC12Classification(data.Dataset):
         self.target_transform = target_transform
         self.classes = read_file(path_to_dictionary)
         # download dataset
-        # download_voc2007(self.root)
+        download_iaprtc12(self.root)
 
         # define path of csv file
         # path_csv = os.path.join(self.root, 'files', 'VOC2007')
@@ -122,7 +158,7 @@ class IAPRTC12Classification(data.Dataset):
             self.inp = pickle.load(f)
         self.inp_name = inp_name
 
-        print('[dataset] VOC 2007 classification set=%s number of classes=%d  number of images=%d' % (
+        print('[dataset] IAPR-TC 12 classification set=%s number of classes=%d  number of images=%d' % (
             set, len(self.classes), len(self.images)))
 
     # open the required image on the go (when item is accessed)
