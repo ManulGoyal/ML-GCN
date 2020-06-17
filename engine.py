@@ -407,9 +407,15 @@ class MultiLabelMAPEngine(Engine):
 
 class GCNMultiLabelMAPEngine(MultiLabelMAPEngine):
     def on_forward(self, training, model, criterion, data_loader, optimizer=None, display=True):
-        feature_var = torch.Tensor(self.state['feature']).float()       #self.state['feature'] is defined in below method
-        target_var = torch.Tensor(self.state['target']).float()
-        inp_var = torch.Tensor(self.state['input']).float().detach()  # one hot TODO: doubt, why detach?
+        device = torch.device("cuda:0" if self.state['use_gpu'] else "cpu")
+        
+        feature_var = self.state['feature']
+        target_var = self.state['target']
+        inp_var = self.state['input'].detach()
+
+        # feature_var = torch.Tensor(self.state['feature'], device=device)    #self.state['feature'] is defined in below method
+        # target_var = torch.Tensor(self.state['target'], device=device)
+        # inp_var = torch.Tensor(self.state['input'], device=device).detach()  # one hot TODO: doubt, why detach?
         if not training:
             with torch.no_grad():
                 self.state['output'] = model(feature_var, inp_var)
@@ -418,6 +424,7 @@ class GCNMultiLabelMAPEngine(MultiLabelMAPEngine):
             self.state['output'] = model(feature_var, inp_var)
             self.state['loss'] = criterion(self.state['output'], target_var)
 
+            
             # Backpropagation
             optimizer.zero_grad()
             self.state['loss'].backward()
@@ -437,7 +444,13 @@ class GCNMultiLabelMAPEngine(MultiLabelMAPEngine):
         self.state['target'][self.state['target'] == -1] = 0
 
         input = self.state['input']
+        
         self.state['feature'] = input[0]        # stores the image matrix
         self.state['out'] = input[1]            # stores the image number (ex. 000050)
         self.state['input'] = input[2]          # stores the word embedding matrix (20x300)
+
+        #added
+        if self.state['use_gpu']:
+            self.state['feature'] = self.state['feature'].cuda()
+            self.state['input'] = self.state['input'].cuda()
 
