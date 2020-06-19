@@ -73,7 +73,7 @@ def get_labelled_data(setname, path):
         img_path = os.path.join(path, name)
         if not os.path.exists(img_path): 
             continue 
-        labels = np.full(shape = (num_classes, ), -1, dtype=np.float32)
+        labels = np.full(shape = (num_classes, ), fill_value=-1, dtype=np.float32)
         for keyword in keywords:
             labels[keyword-1] = 1
         labels = torch.from_numpy(labels)
