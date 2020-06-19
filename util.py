@@ -7,6 +7,7 @@ import numpy as np
 import random
 import torch.nn.functional as F
 
+epsilon = 0.000000000001
 class Warp(object):
     def __init__(self, size, interpolation=Image.BILINEAR):
         self.size = int(size)
@@ -232,7 +233,7 @@ class AveragePrecisionMeter(object):
         sorted, indices = torch.sort(output, dim=0, descending=True)
 
         # Computes prec@i
-        pos_count = 0.
+        pos_count = epsilon
         total_count = 0.
         precision_at_i = 0.
         for i in indices:
@@ -270,7 +271,7 @@ class AveragePrecisionMeter(object):
 
     def evaluation(self, scores_, targets_):
         n, n_class = scores_.shape
-        Nc, Np, Ng = np.zeros(n_class), np.zeros(n_class), np.zeros(n_class)
+        Nc, Np, Ng = np.full(n_class, epsilon), np.full(n_class, epsilon), np.full(n_class, epsilon)
         for k in range(n_class):
             scores = scores_[:, k]
             targets = targets_[:, k]
