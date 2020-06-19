@@ -7,6 +7,7 @@ import numpy as np
 import random
 import torch.nn.functional as F
 
+epsilon = 0.000000000001
 class Warp(object):
     def __init__(self, size, interpolation=Image.BILINEAR):
         self.size = int(size)
@@ -232,7 +233,7 @@ class AveragePrecisionMeter(object):
         sorted, indices = torch.sort(output, dim=0, descending=True)
 
         # Computes prec@i
-        pos_count = 0.
+        pos_count = epsilon
         total_count = 0.
         precision_at_i = 0.
         for i in indices:
@@ -270,7 +271,8 @@ class AveragePrecisionMeter(object):
 
     def evaluation(self, scores_, targets_):
         n, n_class = scores_.shape
-        Nc, Np, Ng = np.zeros(n_class), np.zeros(n_class), np.zeros(n_class)
+        infinitesmal = np.full(n_class, epsilon)
+        Nc, Np, Ng = np.full(n_class, epsilon), np.full(n_class, epsilon), np.full(n_class, epsilon)
         for k in range(n_class):
             scores = scores_[:, k]
             targets = targets_[:, k]
@@ -281,11 +283,11 @@ class AveragePrecisionMeter(object):
         Np[Np == 0] = 1
         OP = np.sum(Nc) / np.sum(Np)
         OR = np.sum(Nc) / np.sum(Ng)
-        OF1 = (2 * OP * OR) / (OP + OR)
+        OF1 = (2 * OP * OR) / (OP + OR + epsilon)
 
-        CP = np.sum(Nc / Np) / n_class
-        CR = np.sum(Nc / Ng) / n_class
-        CF1 = (2 * CP * CR) / (CP + CR)
+        CP = np.sum(Nc / (Np+infinitesmal)) / (n_class+epsilon)
+        CR = np.sum(Nc / (Ng+infinitesmal)) / (n_class+epsilon)
+        CF1 = (2 * CP * CR) / (CP + CR + epsilon)
         return OP, OR, OF1, CP, CR, CF1
 
 def gen_A(num_classes, t, adj_file):
